@@ -19,7 +19,6 @@
 (executable
   ((name opam_check)
    (modules (opam_check))
-   (flags (:standard (:include ../ocaml-flags-standard.sexp) (:include ocaml-context-flags.sexp)))
    (libraries (opam-client))))
 
 (executable
@@ -27,5 +26,4 @@
    (package opam)
    (public_name opam-installer)
    (modules (opam_installer))
-   (libraries (opam-state cmdliner))
-   (flags (:standard (:include ../ocaml-flags-standard.sexp) (:include ocaml-context-flags.sexp)))))
+   (libraries (opam-state cmdliner))))

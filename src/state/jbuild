@@ -10,7 +10,6 @@
    (public_name opam-state)
    (libraries (opam-repository))
    (synopsis "OCaml Package Manager instance management library")
-   (flags (:standard (:include ../ocaml-flags-standard.sexp) (:include ocaml-context-flags.sexp)))
    (wrapped false)))
 
 (rule

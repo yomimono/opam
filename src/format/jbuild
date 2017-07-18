@@ -10,7 +10,6 @@
    (public_name opam-format)
    (synopsis "OCaml Package Manager file format handling library")
    (libraries (opam-core opam-file-format re.pcre re.posix))
-   (flags (:standard (:include ../ocaml-flags-standard.sexp) (:include ocaml-context-flags.sexp)))
    (wrapped false)))
 
 (ocamllex (opamLineLexer))

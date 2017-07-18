@@ -42,7 +42,6 @@ let () = Printf.ksprintf J.send {|
    (synopsis "OCaml Package Manager client and CLI library")
    (modules (:standard \ opamMain))
    (libraries (opam-state opam-solver re.glob cmdliner))
-   (flags (:standard (:include ../ocaml-flags-standard.sexp) (:include ocaml-context-flags.sexp)))
    (wrapped false)))
 
 (executable
@@ -50,7 +49,6 @@ let () = Printf.ksprintf J.send {|
    (public_name opam)
    (package opam)
    (modules opamMain)
-   (flags (:standard (:include ../ocaml-flags-standard.sexp) (:include ocaml-context-flags.sexp)))
    (libraries (opam-client))))
 
 (rule

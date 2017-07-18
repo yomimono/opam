@@ -2,18 +2,18 @@ ifeq ($(findstring clean,$(MAKECMDGOALS)),)
 -include Makefile.config
 endif
 
-all: opam-lib opam opam-installer
+all: opam opam-installer
 	@
 
 ifeq ($(JBUILDER),)
-JBUILDER_DEP=src_ext/jbuilder/_build/install/default/bin/jbuilder.exe
-JBUILDER:=$(shell echo "$(JBUILDER_DEP)" | cygpath -f - -a)
+JBUILDER_DEP=src_ext/jbuilder/_build/install/default/bin/jbuilder
+JBUILDER:=$(JBUILDER_DEP)
 else
 JBUILDER_DEP=
 endif
 
 src_ext/jbuilder/_build/install/default/bin/jbuilder.exe: src_ext/jbuilder.stamp
-	cd src_ext/jbuilder && ocaml bootstrap.ml && ./boot
+	cd src_ext/jbuilder && ocaml bootstrap.ml && ./boot.exe
 
 src_ext/jbuilder.stamp:
 	make -C src_ext jbuilder.stamp
@@ -24,28 +24,12 @@ jbuilder: $(JBUILDER_DEP)
 ALWAYS:
 	@
 
-opam-lib opam opam-installer all: ALWAYS
+opam opam-installer all: ALWAYS
 
-#backwards-compat
-compile with-ocamlbuild: all
-	@
-install-with-ocamlbuild: install
-	@
-libinstall-with-ocamlbuild: libinstall
-	@
+opam: opam.install
 
-byte:
-	$(MAKE) all USE_BYTE=true
-
-src/%:
-	$(MAKE) -C src $*
-
-# Disable this rule if the only build targets are cold, download-ext or configure
-# to suppress error messages trying to build Makefile.config
-ifneq ($(or $(filter-out cold download-ext lib-pkg configure,$(MAKECMDGOALS)),$(filter own-goal,own-$(MAKECMDGOALS)goal)),)
-%:
-	$(MAKE) -C src $@
-endif
+opam-installer: $(JBUILDER_DEP)
+	$(JBUILDER) build src/tools/opam_installer.exe
 
 lib-ext:
 	$(MAKE) -j -C src_ext lib-ext
@@ -63,7 +47,6 @@ clean-ext:
 	$(MAKE) -C src_ext distclean
 
 clean:
-	$(MAKE) -C src $@
 	$(MAKE) -C doc $@
 	rm -f *.install *.env *.err *.info *.out
 	rm -rf _build
@@ -90,10 +73,10 @@ ifneq ($(LIBINSTALL_DIR),)
     OPAMINSTALLER_FLAGS += --libdir "$(LIBINSTALL_DIR)"
 endif
 
-opam-%.install: ALWAYS
+opam-%.install: ALWAYS $(JBUILDER_DEP)
 	$(JBUILDER) build $@
 
-opam.install:
+opam.install: $(JBUILDER_DEP)
 	$(JBUILDER) build $@
 
 opam-actual.install: opam.install
